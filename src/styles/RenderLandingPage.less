@@ -8,6 +8,8 @@
 @tablet-large: ~"(min-width: 769px) and (max-width: 1024px)";
 @laptop: ~"(min-width: 1025px) and (max-width: 1280px)";
 
+
+
 .header {
     background-color: @main-color;
     display:flex;
@@ -41,17 +43,51 @@
     font-size: 1.2rem;
 }
 
-// .graphs-section {
-//  ADD THIS BACK IN WHEN YOU HAVE THE GRAPHS SECTION
-// }
+.graphs-section {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    width: 100%;
+    padding: 2% 5%;
+  }
 
+  .graphs-section h2 {
+    font-family: 'beatrice regular';
+    font-size: 100%;
+    font-weight: bold;
+}
+  
+  .grant-rates-by-office-graph-container,
+  .grant-rates-by-nationality-container,
+  .grant-rates-over-time-container {
+    flex: 1; 
+    text-align: center; 
+  }
+  
+  //graph images
+  .gr-office-img,
+  .gr-nationality-img,
+  .gr-overtime-img {
+    width: auto; 
+    max-width: auto; 
+    height: 200px; 
+    max-height: auto;
+}
+  
+//added justify-content to keep in the center and gap to match the gap in example
 .view-more-data-btn-container {
+    display:flex;
     height: 44px;
     width: 180px;
+    justify-content: center;
     margin: 0 auto;
     text-align: center;
+    margin-top: 5%;
     margin-bottom: 10%;
+    gap: 20px;
 }
+
+
 
 .middle-section {
     display: flex;
@@ -63,21 +99,78 @@
     height: 339px;
     width: 648px;
     border-radius: 10px;
+    padding: 2% 5%;
 }
 
 .middle-section-text-container {
     width: 700px;
     text-align: center;
+    padding: 2% 5%;
 }
 
 .middle-section-text-container h3 {
     font-family: 'acumin';
-    font-size: 1.4rem;
+    font-size: 100%;
 }
 
-// .bottom-section {
-//      ADD THIS BACK IN WHEN YOU HAVE A BOTTOM SECTION
-// }
+.bottom-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+    padding: 2% 5%;
+    margin-top: 10%;
+  }
+  
+  
+  .bottom-section-title {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  //for title size
+  .bottom-section h1 {
+    text-align: center;
+    font-family: 'beatrice regular';
+    font-size: 2.2rem;
+  }
+  
+  //for information-titles size
+  .bottom-section h2 {
+    text-align: center;
+    font-family: 'beatrice regular';
+    font-size: 1.7rem;
+  }
+
+  //for information size
+  .bottom-section h3 {
+    text-align: center;
+    font-family: 'beatrice regular';
+    font-size: 1.2rem;
+  }
+  
+  .bottom-section-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    padding: 2% 5%;
+    width: 100%;
+    gap: 100px;
+  }
+  
+  .bottom-section-text-container {
+    flex: 1; 
+    text-align: left; 
+  }
+  
+  .bottom-section h3 {
+    font-size: 1.2rem;
+    margin-top: 10px; 
+  }
+
+
 
 .back-to-top {
     width: 8%;
@@ -85,6 +178,8 @@
     cursor: pointer;
     color: black;
     margin: 5% auto;
+    text-align: center;
+    justify-content: center;
 }
 
 .ant-space-align-center {
