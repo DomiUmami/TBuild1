@@ -14,6 +14,9 @@ import { resetVisualizationQuery } from '../../../state/actionCreators';
 import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
+//URL
+const baseURL = "https://hrf-asylum-be-b.herokuapp.com/cases";
+
 const { background_color } = colors;
 
 function GraphWrapper(props) {
@@ -52,46 +55,37 @@ function GraphWrapper(props) {
   }
   function updateStateWithNewData(years, view, office, stateSettingCallback) {
 
-    const baseURL = "https://hrf-asylum-be-b.herokuapp.com/cases";
 
-    const endpoint =
-    view === "citizenship"
-      ? `${baseURL}/citizenshipSummary`
-      : `${baseURL}/fiscalSummary`;
+    const params = office === 'all' || !office
+    ? { from: years[0], to: years[1] }
+    : { from: years[0], to: years[1], office: office };
 
-    if (office === 'all' || !office) {
-      axios
-        .get(endpoint, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
-          params: {
-            from: years[0],
-            to: years[1],
-          },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, result.data); // <-- `test_data` here can be simply replaced by `result.data` in prod!
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    } else {
-      axios
-        .get(endpoint, {
-          // mock URL, can be simply replaced by `${Real_Production_URL}/summary` in prod!
-          params: {
-            from: years[0],
-            to: years[1],
-            office: office,
-          },
-        })
-        .then(result => {
-          stateSettingCallback(view, office, result.data); // <-- `test_data` here can be simply replaced by `result.data` in prod!
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
-  }
+  // Endpoint requests
+  const citizenshipEndpoint = `${baseURL}/citizenshipSummary`;
+  const fiscalEndpoint = `${baseURL}/fiscalSummary`;
+
+  // Use Promise.all to fetch both endpoints
+  Promise.all([
+    axios.get(citizenshipEndpoint, { params }),  // Citizenship data
+    axios.get(fiscalEndpoint, { params }),      // Fiscal data
+  ])
+    .then(([citizenshipResponse, fiscalResponse]) => {
+      // Merge the responses into one JSON object
+      const result = {
+        citizenshipData: citizenshipResponse.data,
+        fiscalData: fiscalResponse.data,
+      };
+
+      console.log(result); // Check the merged data structure
+
+      // Pass the merged data to the callback function
+      stateSettingCallback(view, office, result);
+    })
+    .catch(err => {
+      console.error(err);  // Handle any errors
+    });
+}
+
   const clearQuery = (view, office) => {
     dispatch(resetVisualizationQuery(view, office));
   };
