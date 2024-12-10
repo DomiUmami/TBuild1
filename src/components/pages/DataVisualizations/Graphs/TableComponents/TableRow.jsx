@@ -16,7 +16,7 @@ function TableRow(props) {
         overflow: 'hidden',
       }}
     >
-      {{columns,map(property, idx){
+      {columns.map((property, idx) => {
         if (row) {
           if (typeof row[property] === 'object') {
             return (
@@ -34,14 +34,11 @@ function TableRow(props) {
                   rowHeight={rowHeight}
                 />
               </div>
-          );
-         }
-        } else {
-          return <></>;
-      }}
-}
-}
-  </div>
+            );
+          }
+        }
+      })}
+    </div>
   );
 }
 

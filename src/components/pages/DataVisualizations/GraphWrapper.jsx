@@ -53,37 +53,82 @@ function GraphWrapper(props) {
         break;
     }
   }
-  function updateStateWithNewData(years, view, office, stateSettingCallback) {
+  async function updateStateWithNewData(years, view, office, stateSettingCallback) {
+    /*
+          _                                                                             _
+        |                                                                                 |
+        |   Example request for once the `/summary` endpoint is up and running:           |
+        |                                                                                 |
+        |     `${url}/summary?to=2022&from=2015&office=ZLA`                               |
+        |                                                                                 |
+        |     so in axios we will say:                                                    |
+        |                                                                                 |     
+        |       axios.get(`${url}/summary`, {                                             |
+        |         params: {                                                               |
+        |           from: <year_start>,                                                   |
+        |           to: <year_end>,                                                       |
+        |           office: <office>,       [ <-- this one is optional! when    ]         |
+        |         },                        [ querying by `all offices` there's ]         |
+        |       })                          [ no `office` param in the query    ]         |
+        |                                                                                 |
+          _                                                                             _
+                                   -- Mack 
+    
+    */
 
+    // Endpoint requests for usable data
+    const fiscalEndpoint = `${baseURL}/fiscalSummary`;
+    const citizenshipEndpoint = `${baseURL}/citizenshipSummary`;
 
-    const params = office === 'all' || !office
-    ? { from: years[0], to: years[1] }
-    : { from: years[0], to: years[1], office: office };
+    if (office === 'all' || !office) {
+      try { 
+      const fiscalData = await axios.get(fiscalEndpoint, {
+          params: {
+            from: years[0],
+            to: years[1],
+          },
+        });
 
-  // Endpoint requests
-  const citizenshipEndpoint = `${baseURL}/citizenshipSummary`;
-  const fiscalEndpoint = `${baseURL}/fiscalSummary`;
+      const citizenshipData = await axios.get(citizenshipEndpoint, {
+          params: {
+            from: years[0],
+            to: years[1],
+          },
+        });
+        
+        //Combined data received from citizenshipEndpoint into fiscalEndpoint under citizenshipResults to match test_data
+          fiscalData.data.citizenshipResults = citizenshipData.data;
+          
+          stateSettingCallback(view, office, [fiscalData.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
+        } catch(error) {
+            console.error('An error occurred:', error);
+          }
+        } else {
+          try{
+      const fiscalData = await axios.get(fiscalEndpoint, {
+          params: {
+            from: years[0],
+            to: years[1],
+            office: office,
+          },
+        });
 
-  // Use Promise.all to fetch both endpoints
-  Promise.all([
-    axios.get(citizenshipEndpoint, { params }),  // Citizenship data
-    axios.get(fiscalEndpoint, { params }),      // Fiscal data
-  ])
-    .then(([citizenshipResponse, fiscalResponse]) => {
-      // Merge the responses into one JSON object
-      const result = {
-        citizenshipData: citizenshipResponse.data,
-        fiscalData: fiscalResponse.data,
-      };
-
-      console.log(result); // Check the merged data structure
-
-      // Pass the merged data to the callback function
-      stateSettingCallback(view, office, result);
-    })
-    .catch(err => {
-      console.error(err);  // Handle any errors
-    });
+      const citizenshipData = await axios.get(citizenshipEndpoint, {
+          params: {
+            from: years[0],
+            to: years[1],
+            office: office,
+          },
+        });
+        
+        //Combined data received from citizenshipEndpoint into fiscalEndpoint under citizenshipResults to match test_data
+        fiscalData.data.citizenshipResults = citizenshipData.data;
+  
+          stateSettingCallback(view, office, [fiscalData.data]); // <-- `test_data` here can be simply replaced by `result.data` in prod!
+    } catch(error) {
+      console.error('An error occurred:', error);
+    }
+  }
 }
 
   const clearQuery = (view, office) => {
