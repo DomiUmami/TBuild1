@@ -15,7 +15,7 @@ import { colors } from '../../../styles/data_vis_colors';
 import ScrollToTopOnMount from '../../../utils/scrollToTopOnMount';
 
 //URL
-const baseURL = "https://hrf-asylum-be-b.herokuapp.com/cases";
+const baseURL = "https://asylum-be.onrender.com";
 
 const { background_color } = colors;
 
