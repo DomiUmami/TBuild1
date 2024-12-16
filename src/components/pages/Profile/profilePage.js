@@ -4,7 +4,7 @@ import '../../../styles/ProfilePage.less';
 
 
 const Profile = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user } = useAuth0();
   const { name, picture, email } = user;
 
   return (
