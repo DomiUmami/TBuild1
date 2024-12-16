@@ -3,10 +3,15 @@ import { Image } from 'antd';
 import { Link } from 'react-router-dom';
 import Logo from '../../styles/Images/WhiteLogo.png';
 import { colors } from '../../styles/data_vis_colors';
+import AuthenticationButton from '../../auth/authentication-button';
+import { useAuth0 } from '@auth0/auth0-react';
+//import Auth0ProviderWithHistory from '../../auth/auth0-provider-with-history';
 
 const { primary_accent_color } = colors;
 
 function HeaderContent() {
+  const { isAuthenticated } = useAuth0(); 
+
   return (
     <div
       style={{
@@ -25,9 +30,13 @@ function HeaderContent() {
         <Link to="/" style={{ color: '#E2F0F7', paddingRight: '75px' }}>
           Home
         </Link>
-        <Link to="/graphs" style={{ color: '#E2F0F7' }}>
+        { isAuthenticated && (<Link to="/graphs" style={{ color: '#E2F0F7', paddingRight: '75px' }}>
           Graphs
-        </Link>
+        </Link>)}
+          { isAuthenticated && (<Link to="/profile" style={{ color: '#E2F0F7', paddingRight: '75px' }}>
+          Profile
+        </Link>)}
+        <AuthenticationButton />
       </div>
     </div>
   );
